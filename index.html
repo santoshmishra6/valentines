@@ -62,16 +62,15 @@ h1 {
   color: white;
 }
 
-/* Hearts – More Visible */
+/* GPU Optimized Hearts */
 .heart {
-  position: absolute;
-  bottom: -50px;
-  font-size: 55px;
-  animation: floatUp 6s linear forwards;
+  position: fixed;
+  bottom: 0;
+  font-size: 50px;
+  animation: floatUp 5s linear forwards;
   cursor: pointer;
-  text-align: center;
   user-select: none;
-  text-shadow: 0 0 10px #ffffff, 0 0 20px #ff00aa;
+  will-change: transform;
 }
 
 .heart span {
@@ -87,7 +86,7 @@ h1 {
   border-radius: 10px;
   opacity: 0;
   transition: opacity 0.3s ease;
-  width: 85px;
+  width: 80px;
   text-align: center;
   pointer-events: none;
 }
@@ -97,22 +96,23 @@ h1 {
 }
 
 @keyframes floatUp {
-  0% { bottom: -50px; }
-  100% { bottom: 110vh; }
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-120vh); }
 }
 
-/* Confetti */
+/* Lightweight Confetti */
 .confetti {
-  position: absolute;
+  position: fixed;
+  top: -10px;
   width: 6px;
   height: 6px;
-  top: -10px;
-  background: currentColor;
-  animation: fall linear forwards;
+  animation: fall 3s linear forwards;
+  will-change: transform;
 }
 
 @keyframes fall {
-  to { transform: translateY(110vh) rotate(360deg); }
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(110vh) rotate(360deg); }
 }
 
 </style>
@@ -131,7 +131,7 @@ h1 {
 
 <script>
 
-/* ===== Multiple Messages ===== */
+/* Messages */
 const messages = [
   "Moti, tum meri duniya ho ❤️",
   "Har din tumhare saath special hai ❤️",
@@ -143,11 +143,11 @@ let messageIndex = 0;
 let text = "";
 let textIndex = 0;
 
-/* ===== Names for Hearts ===== */
+/* Names */
 const loveNames = ["moti", "falei", "hati chua", "pendiki", "fulei"];
 let nameIndex = 0;
 
-/* Typing Effect */
+/* Typing */
 function typeText() {
   const box = document.getElementById("typing");
   box.innerHTML = "";
@@ -159,11 +159,11 @@ function typingLoop() {
   if (textIndex < text.length) {
     document.getElementById("typing").innerHTML += text.charAt(textIndex);
     textIndex++;
-    setTimeout(typingLoop, 35);
+    setTimeout(typingLoop, 30);
   }
 }
 
-/* Button Click */
+/* Button */
 function startLove() {
 
   const btn = document.getElementById("loveBtn");
@@ -174,14 +174,10 @@ function startLove() {
   btn.innerHTML = "❤️ Forever Yours...";
   btn.disabled = true;
 
-  /* Change message each click */
   text = messages[messageIndex];
   typeText();
 
-  messageIndex++;
-  if (messageIndex >= messages.length) {
-    messageIndex = 0;
-  }
+  messageIndex = (messageIndex + 1) % messages.length;
 
   releaseHearts();
   launchConfetti();
@@ -192,15 +188,15 @@ function startLove() {
     btn.innerHTML = "I Love You ❤️";
     btn.disabled = false;
     nameIndex = 0;
-  }, 6000);
+  }, 5000);
 }
 
 /* Hearts */
 function releaseHearts() {
 
-  const colors = ["#ffffff", "#00ffff", "#ffff00", "#ffccff"];
+  const colors = ["#ffffff", "#ffff00", "#00ffff"];
 
-  for (let h = 0; h < 5; h++) {
+  for (let h = 0; h < 4; h++) {
 
     const heart = document.createElement("div");
     heart.className = "heart";
@@ -225,18 +221,19 @@ function releaseHearts() {
     });
 
     document.body.appendChild(heart);
-    setTimeout(()=>heart.remove(),6000);
+    setTimeout(()=>heart.remove(),5000);
   }
 }
 
 /* Confetti */
 function launchConfetti() {
-  for (let c = 0; c < 15; c++) {
+  for (let c = 0; c < 10; c++) {
+
     const confetti = document.createElement("div");
     confetti.className = "confetti";
     confetti.style.left = Math.random() * window.innerWidth + "px";
     confetti.style.background = `hsl(${Math.random()*360},100%,60%)`;
-    confetti.style.animationDuration = (2 + Math.random()) + "s";
+
     document.body.appendChild(confetti);
     setTimeout(()=>confetti.remove(),3000);
   }
