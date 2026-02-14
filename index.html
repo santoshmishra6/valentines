@@ -63,17 +63,20 @@ h1 {
   color: white;
 }
 
-/* Floating Heart (Emoji) */
+/* Floating Heart */
 .heart {
   position: absolute;
   bottom: -60px;
   font-size: 60px;
-  animation: floatUp 7s linear forwards;
+  animation: floatUp 7s linear forwards, sway 3s ease-in-out infinite alternate;
   cursor: pointer;
   text-align: center;
   user-select: none;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.9))
+          drop-shadow(0 0 20px rgba(255,0,100,0.8));
 }
 
+/* Text inside heart */
 .heart span {
   position: absolute;
   top: 50%;
@@ -96,6 +99,39 @@ h1 {
 @keyframes floatUp {
   0% { bottom: -60px; }
   100% { bottom: 110vh; }
+}
+
+@keyframes sway {
+  from { transform: translateX(-10px); }
+  to { transform: translateX(10px); }
+}
+
+/* Sparkles */
+.sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+  animation: sparkleFade 1s linear forwards;
+}
+
+@keyframes sparkleFade {
+  to { opacity: 0; transform: translateY(-20px) scale(0.5); }
+}
+
+/* Mini Heart Explosion */
+.mini-heart {
+  position: absolute;
+  font-size: 20px;
+  animation: explode 0.8s ease-out forwards;
+}
+
+@keyframes explode {
+  to {
+    transform: translate(var(--x), var(--y)) scale(0.5);
+    opacity: 0;
+  }
 }
 
 /* Confetti */
@@ -146,10 +182,8 @@ function typingLoop() {
 
 function startLove() {
   const btn = document.getElementById("loveBtn");
-
   if (btn.disabled) return;
 
-  // Change button appearance
   btn.classList.remove("btn-default");
   btn.classList.add("btn-active");
   btn.innerHTML = "❤️ Forever Yours...";
@@ -159,7 +193,6 @@ function startLove() {
   releaseHearts();
   launchConfetti();
 
-  // Reset after 8 seconds
   setTimeout(() => {
     btn.classList.remove("btn-active");
     btn.classList.add("btn-default");
@@ -169,13 +202,16 @@ function startLove() {
 }
 
 function releaseHearts() {
+
+  const colors = ["#ffffff","#ffd700","#ffccff","#ff69b4","#00ffff"];
+
   for (let h = 0; h < 8; h++) {
 
     const heart = document.createElement("div");
     heart.className = "heart";
     heart.innerHTML = "❤️";
-
     heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.color = colors[Math.floor(Math.random()*colors.length)];
 
     const span = document.createElement("span");
     span.innerHTML = "I Love You";
@@ -183,11 +219,45 @@ function releaseHearts() {
 
     heart.addEventListener("pointerdown", () => {
       heart.classList.add("show");
+      createExplosion(heart);
     });
+
+    // Sparkle trail
+    const sparkleInterval = setInterval(() => {
+      createSparkle(heart);
+    }, 200);
 
     document.body.appendChild(heart);
 
-    setTimeout(() => heart.remove(), 7000);
+    setTimeout(() => {
+      clearInterval(sparkleInterval);
+      heart.remove();
+    }, 7000);
+  }
+}
+
+function createSparkle(heart) {
+  const sparkle = document.createElement("div");
+  sparkle.className = "sparkle";
+  sparkle.style.left = heart.offsetLeft + 25 + "px";
+  sparkle.style.top = heart.getBoundingClientRect().top + 40 + "px";
+  document.body.appendChild(sparkle);
+  setTimeout(()=>sparkle.remove(),1000);
+}
+
+function createExplosion(heart) {
+  for (let i = 0; i < 6; i++) {
+    const mini = document.createElement("div");
+    mini.className = "mini-heart";
+    mini.innerHTML = "💖";
+    mini.style.left = heart.offsetLeft + "px";
+    mini.style.top = heart.getBoundingClientRect().top + "px";
+
+    mini.style.setProperty("--x", (Math.random()*100 - 50) + "px");
+    mini.style.setProperty("--y", (Math.random()*100 - 50) + "px");
+
+    document.body.appendChild(mini);
+    setTimeout(()=>mini.remove(),800);
   }
 }
 
@@ -196,10 +266,10 @@ function launchConfetti() {
     const confetti = document.createElement("div");
     confetti.className = "confetti";
     confetti.style.left = Math.random() * window.innerWidth + "px";
-    confetti.style.background = `hsl(${330 + Math.random()*20},100%,60%)`;
+    confetti.style.background = `hsl(${Math.random()*360},100%,60%)`;
     confetti.style.animationDuration = (2 + Math.random()*2) + "s";
     document.body.appendChild(confetti);
-    setTimeout(() => confetti.remove(), 4000);
+    setTimeout(()=>confetti.remove(),4000);
   }
 }
 
