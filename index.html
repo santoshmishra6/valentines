@@ -62,32 +62,55 @@ h1 {
   color: white;
 }
 
-/* GPU Optimized Hearts */
+/* ================= HEART ================= */
+
 .heart {
   position: fixed;
-  bottom: 0;
-  font-size: 50px;
+  bottom: -60px;
+  width: 45px;
+  height: 45px;
+  transform: rotate(45deg);
   animation: floatUp 5s linear forwards;
   cursor: pointer;
-  user-select: none;
   will-change: transform;
 }
 
+/* Heart shape */
+.heart::before,
+.heart::after {
+  content: "";
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.heart::before {
+  top: -22px;
+  left: 0;
+}
+
+.heart::after {
+  left: -22px;
+  top: 0;
+}
+
+/* Bubble message above heart */
 .heart span {
   position: absolute;
-  top: 50%;
+  bottom: 65px;
   left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 13px;
-  font-weight: bold;
-  color: black;
+  transform: translateX(-50%) rotate(-45deg);
   background: white;
-  padding: 2px 6px;
-  border-radius: 10px;
+  color: #ff1744;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 15px;
+  white-space: nowrap;
   opacity: 0;
-  transition: opacity 0.3s ease;
-  width: 80px;
-  text-align: center;
+  transition: 0.3s ease;
   pointer-events: none;
 }
 
@@ -95,12 +118,13 @@ h1 {
   opacity: 1;
 }
 
+/* Smooth GPU animation */
 @keyframes floatUp {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-120vh); }
+  0% { transform: translateY(0) rotate(45deg); }
+  100% { transform: translateY(-120vh) rotate(45deg); }
 }
 
-/* Lightweight Confetti */
+/* Confetti */
 .confetti {
   position: fixed;
   top: -10px;
@@ -131,7 +155,7 @@ h1 {
 
 <script>
 
-/* Messages */
+/* ===== Rotating Messages ===== */
 const messages = [
   "Moti, tum meri duniya ho ❤️",
   "Har din tumhare saath special hai ❤️",
@@ -143,11 +167,11 @@ let messageIndex = 0;
 let text = "";
 let textIndex = 0;
 
-/* Names */
+/* ===== Names inside hearts ===== */
 const loveNames = ["moti", "falei", "hati chua", "pendiki", "fulei"];
 let nameIndex = 0;
 
-/* Typing */
+/* Typing Effect */
 function typeText() {
   const box = document.getElementById("typing");
   box.innerHTML = "";
@@ -163,7 +187,7 @@ function typingLoop() {
   }
 }
 
-/* Button */
+/* Button Click */
 function startLove() {
 
   const btn = document.getElementById("loveBtn");
@@ -191,18 +215,22 @@ function startLove() {
   }, 5000);
 }
 
-/* Hearts */
+/* Create Hearts */
 function releaseHearts() {
 
-  const colors = ["#ffffff", "#ffff00", "#00ffff"];
+  const gradients = [
+    "linear-gradient(45deg,#ff2e63,#ff6ec7)",
+    "linear-gradient(45deg,#ff0000,#ff8c00)",
+    "linear-gradient(45deg,#ff1493,#ff69b4)",
+    "linear-gradient(45deg,#ff4d4d,#ff99cc)"
+  ];
 
   for (let h = 0; h < 4; h++) {
 
     const heart = document.createElement("div");
     heart.className = "heart";
-    heart.innerHTML = "❤️";
     heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.color = colors[Math.floor(Math.random()*colors.length)];
+    heart.style.background = gradients[Math.floor(Math.random()*gradients.length)];
 
     const span = document.createElement("span");
     heart.appendChild(span);
