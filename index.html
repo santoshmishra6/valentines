@@ -10,7 +10,7 @@
 
 <style>
 
-/* Romantic Red Background */
+/* Background */
 body {
   margin: 0;
   height: 100vh;
@@ -42,9 +42,6 @@ body {
 h1 {
   font-family: "Pacifico", cursive;
   font-size: 2.2rem;
-  text-shadow:
-    2px 2px 0px #ff1744,
-    4px 4px 12px rgba(0,0,0,0.6);
   margin-bottom: 15px;
 }
 
@@ -53,9 +50,9 @@ h1 {
   min-height: 50px;
   margin-bottom: 15px;
   font-weight: 500;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.8);
 }
 
+/* Button */
 .btn-love {
   padding: 12px 28px;
   font-size: 1.1rem;
@@ -82,42 +79,63 @@ h1 {
 
 .btn-love:active {
   transform: translateY(6px);
-  box-shadow:
-    0 2px 0 #8e0000,
-    0 5px 10px rgba(0,0,0,0.3);
 }
 
 /* Floating Hearts */
 .heart {
   position: absolute;
   bottom: -100px;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   background: currentColor;
   transform: rotate(45deg);
-  animation: floatUp 8s ease-in forwards;
+  animation: floatUp 8s linear forwards;
   box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 999;
 }
 
+/* IMPORTANT FIX */
 .heart::before,
 .heart::after {
   content: "";
   position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   background: currentColor;
   border-radius: 50%;
+  pointer-events: none;
 }
 
-.heart::before { top: -20px; left: 0; }
-.heart::after { left: -20px; top: 0; }
+.heart::before { top: -30px; left: 0; }
+.heart::after { left: -30px; top: 0; }
+
+.heart span {
+  transform: rotate(-45deg);
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+}
+
+.heart.show span {
+  opacity: 1;
+}
 
 @keyframes floatUp {
-  0% { transform: translateY(0) rotate(45deg); }
-  100% { transform: translateY(-120vh) rotate(45deg); }
+  0% { bottom: -100px; }
+  100% { bottom: 110vh; }
 }
 
-/* Falling Hearts */
+/* Falling Confetti */
 .confetti {
   position: absolute;
   width: 10px;
@@ -148,9 +166,7 @@ h1 {
   </button>
 </div>
 
-<!-- Hindi Romantic Song (Replace with your own MP3 file if needed) -->
 <audio id="music" loop>
-  <!-- Example placeholder link -->
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg"/>
 </audio>
 
@@ -214,8 +230,21 @@ function releaseHearts() {
     heart.style.left = Math.random() * window.innerWidth + "px";
     heart.style.color = `hsl(${330 + Math.random()*20},70%,60%)`;
 
+    const textSpan = document.createElement("span");
+    textSpan.innerHTML = "I ❤️ You";
+    heart.appendChild(textSpan);
+
+    heart.addEventListener("pointerdown", () => {
+      heart.classList.add("show");
+
+      heart.style.transform = "rotate(45deg) scale(1.2)";
+      setTimeout(() => {
+        heart.style.transform = "rotate(45deg) scale(1)";
+      }, 200);
+    });
+
     document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 10000);
+    setTimeout(() => heart.remove(), 9000);
   }
 }
 
