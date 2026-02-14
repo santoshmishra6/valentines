@@ -25,7 +25,7 @@ body {
 .container-box {
   padding: 25px;
   border-radius: 20px;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.4);
   text-align: center;
   width: 90%;
   max-width: 380px;
@@ -62,15 +62,16 @@ h1 {
   color: white;
 }
 
-/* Hearts */
+/* Hearts – More Visible */
 .heart {
   position: absolute;
   bottom: -50px;
-  font-size: 50px;
+  font-size: 55px;
   animation: floatUp 6s linear forwards;
   cursor: pointer;
   text-align: center;
   user-select: none;
+  text-shadow: 0 0 10px #ffffff, 0 0 20px #ff00aa;
 }
 
 .heart span {
@@ -80,10 +81,13 @@ h1 {
   transform: translate(-50%, -50%);
   font-size: 13px;
   font-weight: bold;
-  color: white;
+  color: black;
+  background: white;
+  padding: 2px 6px;
+  border-radius: 10px;
   opacity: 0;
   transition: opacity 0.3s ease;
-  width: 80px;
+  width: 85px;
   text-align: center;
   pointer-events: none;
 }
@@ -127,11 +131,19 @@ h1 {
 
 <script>
 
-/* Romantic Message */
-const text = "Har din tumhare saath ek nayi khushi lekar aata hai ❤️";
+/* ===== Multiple Messages ===== */
+const messages = [
+  "Moti, tum meri duniya ho ❤️",
+  "Har din tumhare saath special hai ❤️",
+  "Tum meri smile ka reason ho 😊",
+  "Main hamesha tumhara rahunga ❤️"
+];
+
+let messageIndex = 0;
+let text = "";
 let textIndex = 0;
 
-/* Names */
+/* ===== Names for Hearts ===== */
 const loveNames = ["moti", "falei", "hati chua", "pendiki", "fulei"];
 let nameIndex = 0;
 
@@ -162,7 +174,15 @@ function startLove() {
   btn.innerHTML = "❤️ Forever Yours...";
   btn.disabled = true;
 
+  /* Change message each click */
+  text = messages[messageIndex];
   typeText();
+
+  messageIndex++;
+  if (messageIndex >= messages.length) {
+    messageIndex = 0;
+  }
+
   releaseHearts();
   launchConfetti();
 
@@ -171,14 +191,14 @@ function startLove() {
     btn.classList.add("btn-default");
     btn.innerHTML = "I Love You ❤️";
     btn.disabled = false;
-    nameIndex = 0; // reset names
+    nameIndex = 0;
   }, 6000);
 }
 
 /* Hearts */
 function releaseHearts() {
 
-  const colors = ["#ffffff","#ffd700","#ffccff","#00ffff"];
+  const colors = ["#ffffff", "#00ffff", "#ffff00", "#ffccff"];
 
   for (let h = 0; h < 5; h++) {
 
