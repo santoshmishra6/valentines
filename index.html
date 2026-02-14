@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Happy Valentine's Day ❤️</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;600&display=swap" rel="stylesheet"/>
+
+<style>
+
+/* Romantic Background */
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+  background: radial-gradient(circle at top left, #ff4e50, #fc6076 40%, #ff9a9e 70%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1200px;
+  color: white;
+}
+
+/* Glass Card */
+.container-box {
+  padding: 30px;
+  border-radius: 25px;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(15px);
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.4),
+    inset 0 0 20px rgba(255,255,255,0.15);
+  transform: rotateX(5deg);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+
+/* Title */
+h1 {
+  font-family: "Pacifico", cursive;
+  font-size: 2.3rem;
+  text-shadow:
+    2px 2px 0px #ff1744,
+    4px 4px 12px rgba(0,0,0,0.6);
+  margin-bottom: 15px;
+}
+
+/* Message */
+.message {
+  font-size: 1.05rem;
+  min-height: 50px;
+  margin-bottom: 15px;
+  font-weight: 500;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+}
+
+/* Button */
+.btn-love {
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow:
+    0 8px 0 #b71c1c,
+    0 12px 20px rgba(0,0,0,0.3);
+}
+
+.btn-white {
+  background: #ffffff !important;
+  color: #000 !important;
+}
+
+.pink {
+  background: linear-gradient(45deg, #ff1744, #ff6ec7) !important;
+  color: white !important;
+  box-shadow:
+    0 8px 0 #b71c1c,
+    0 15px 25px rgba(0,0,0,0.4);
+}
+
+.btn-love:active {
+  transform: translateY(6px);
+  box-shadow:
+    0 2px 0 #8e0000,
+    0 5px 10px rgba(0,0,0,0.3);
+}
+
+/* Floating Hearts */
+.heart {
+  position: absolute;
+  bottom: -100px;
+  width: 40px;
+  height: 40px;
+  background: currentColor;
+  transform: rotate(45deg);
+  animation: floatUp 8s ease-in forwards;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.heart::before,
+.heart::after {
+  content: "";
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+.heart::before {
+  top: -20px;
+  left: 0;
+}
+
+.heart::after {
+  left: -20px;
+  top: 0;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) rotate(45deg); }
+  100% { transform: translateY(-120vh) rotate(45deg); }
+}
+
+/* Heart Confetti */
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  background: currentColor;
+  transform: rotate(45deg);
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(720deg); }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container-box">
+  <h1>❤️ Happy Valentine’s Day ❤️</h1>
+  <div class="message" id="typing"></div>
+
+  <button id="loveBtn"
+          class="btn btn-white btn-love"
+          onclick="startLove()">
+    Send Love 💌
+  </button>
+</div>
+
+<audio id="music" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"/>
+</audio>
+
+<script>
+const text = "You make my world brighter, happier, and full of love ❤️";
+let i = 0;
+
+function typeText() {
+  document.getElementById("typing").innerHTML = "";
+  i = 0;
+  typingLoop();
+}
+
+function typingLoop() {
+  if (i < text.length) {
+    document.getElementById("typing").innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typingLoop, 40);
+  }
+}
+
+function startLove() {
+  const music = document.getElementById("music");
+  const btn = document.getElementById("loveBtn");
+
+  if (btn.disabled) return;
+
+  music.currentTime = 0;
+  music.play().catch(() => {});
+
+  btn.classList.remove("btn-white");
+  btn.classList.add("pink");
+  btn.innerHTML = "❤️ Loving...";
+  btn.disabled = true;
+
+  typeText();
+  releaseHearts();
+  launchConfetti();
+
+  setTimeout(resetButton, 8000);
+}
+
+function resetButton() {
+  const btn = document.getElementById("loveBtn");
+  const music = document.getElementById("music");
+
+  btn.classList.remove("pink");
+  btn.classList.add("btn-white");
+  btn.innerHTML = "Send Love 💌";
+  btn.disabled = false;
+
+  music.pause();
+  music.currentTime = 0;
+}
+
+function releaseHearts() {
+  for (let h = 0; h < 12; h++) {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.color = `hsl(${330 + Math.random()*20},70%,60%)`;
+
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 10000);
+  }
+}
+
+function launchConfetti() {
+  for (let c = 0; c < 60; c++) {
+    const confetti = document.createElement("div");
+    confetti.classList.add("confetti");
+
+    confetti.style.left = Math.random() * window.innerWidth + "px";
+    confetti.style.color = `hsl(${330 + Math.random()*20},100%,60%)`;
+    confetti.style.animationDuration = (2 + Math.random() * 2) + "s";
+
+    document.body.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 4000);
+  }
+}
+</script>
+
+</body>
+</html>
